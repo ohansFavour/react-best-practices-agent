@@ -11,6 +11,28 @@ export const metadata: Metadata = {
   title: "React Best Practices Agent — Powered by Bluebag",
   description:
     "The free and open source React Best Practices Agent built on 10+ years of real-world experience, powered by Bluebag Skills.",
+  openGraph: {
+    title: "React Best Practices Agent — Powered by Bluebag",
+    description:
+      "The free and open source React Best Practices Agent built on 10+ years of real-world experience, powered by Bluebag Skills.",
+    type: "website",
+    siteName: "React Best Practices Agent",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "React Best Practices Agent",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "React Best Practices Agent — Powered by Bluebag",
+    description:
+      "The free and open source React Best Practices Agent built on 10+ years of real-world experience, powered by Bluebag Skills.",
+    images: ["/opengraph-image.png"],
+  },
 };
 
 export const viewport = {
