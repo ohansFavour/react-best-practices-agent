@@ -1,10 +1,10 @@
 <a href="https://chat.vercel.ai/">
   <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Agent RBP</h1>
+  <h1 align="center">React Best Practices Agent</h1>
 </a>
 
 <p align="center">
-    Agent RBP is a free, open-source React Best Practices Agent built on 10+ years of real-world experience distilled in Skills powered by Bluebag
+    The free and opensource React Best Practices Agent built on 10+ years of real-world experience distilled in Skills powered by Bluebag
 </p>
 
 <p align="center">
