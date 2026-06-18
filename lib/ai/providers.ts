@@ -5,6 +5,7 @@ import {
   wrapLanguageModel,
 } from "ai";
 import { isTestEnvironment } from "../constants";
+import { DEFAULT_CHAT_MODEL } from "./models";
 
 const THINKING_SUFFIX_REGEX = /-thinking$/;
 
@@ -51,7 +52,7 @@ export function getTitleModel() {
   if (isTestEnvironment && myProvider) {
     return myProvider.languageModel("title-model");
   }
-  return gateway.languageModel("google/gemini-2.5-flash-lite");
+  return gateway.languageModel(DEFAULT_CHAT_MODEL);
 }
 
 export function getArtifactModel() {

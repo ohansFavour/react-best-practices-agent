@@ -1,5 +1,5 @@
 // Curated list of top models from Vercel AI Gateway
-export const DEFAULT_CHAT_MODEL = "google/gemini-2.5-flash-lite";
+export const DEFAULT_CHAT_MODEL = "google/gemini-3.1-flash-lite";
 
 export type ChatModel = {
   id: string;
@@ -43,14 +43,20 @@ export const chatModels: ChatModel[] = [
   },
   // Google
   {
-    id: "google/gemini-2.5-flash-lite",
-    name: "Gemini 2.5 Flash Lite",
+    id: "google/gemini-3.1-flash-lite",
+    name: "Gemini 3.1 Flash Lite",
     provider: "google",
     description: "Ultra fast and affordable",
   },
   {
-    id: "google/gemini-3-pro-preview",
-    name: "Gemini 3 Pro",
+    id: "google/gemini-3.5-flash",
+    name: "Gemini 3.5 Flash",
+    provider: "google",
+    description: "Fast and capable for agentic chat",
+  },
+  {
+    id: "google/gemini-3.1-pro-preview",
+    name: "Gemini 3.1 Pro",
     provider: "google",
     description: "Most capable Google model",
   },
@@ -87,3 +93,15 @@ export const modelsByProvider = chatModels.reduce(
   },
   {} as Record<string, ChatModel[]>
 );
+
+const chatModelIds = new Set(chatModels.map((model) => model.id));
+
+export function isSupportedChatModel(
+  modelId: string | null | undefined
+): modelId is string {
+  return typeof modelId === "string" && chatModelIds.has(modelId);
+}
+
+export function resolveChatModel(modelId: string | null | undefined) {
+  return isSupportedChatModel(modelId) ? modelId : DEFAULT_CHAT_MODEL;
+}

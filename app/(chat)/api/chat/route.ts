@@ -1,3 +1,4 @@
+import { Bluebag } from "@bluebag/ai-sdk";
 import { geolocation } from "@vercel/functions";
 import {
   convertToModelMessages,
@@ -11,13 +12,10 @@ import { after } from "next/server";
 import { createResumableStreamContext } from "resumable-stream";
 import { auth, type UserType } from "@/app/(auth)/auth";
 import { entitlementsByUserType } from "@/lib/ai/entitlements";
+import { resolveChatModel } from "@/lib/ai/models";
 import { type RequestHints, systemPrompt } from "@/lib/ai/prompts";
 import { getLanguageModel } from "@/lib/ai/providers";
-import { createDocument } from "@/lib/ai/tools/create-document";
-import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
-import { updateDocument } from "@/lib/ai/tools/update-document";
 import { isProductionEnvironment } from "@/lib/constants";
-import { Bluebag } from "@bluebag/ai-sdk";
 import {
   createStreamId,
   deleteChatById,
@@ -133,18 +131,22 @@ export async function POST(request: Request) {
         ],
       });
     }
+    const resolvedChatModel = resolveChatModel(selectedChatModel);
     const isReasoningModel =
-      selectedChatModel.includes("reasoning") ||
-      selectedChatModel.includes("thinking");
+      resolvedChatModel.includes("reasoning") ||
+      resolvedChatModel.includes("thinking");
 
     const modelMessages = await convertToModelMessages(uiMessages);
 
     const stream = createUIMessageStream({
       originalMessages: isToolApprovalFlow ? uiMessages : undefined,
       execute: async ({ writer: dataStream }) => {
-       const enhancedConfig = await bluebag.enhance({
-          model: getLanguageModel("google/gemini-3-flash"),
-          system: systemPrompt({ selectedChatModel, requestHints }),
+        const enhancedConfig = await bluebag.enhance({
+          model: getLanguageModel(resolvedChatModel),
+          system: systemPrompt({
+            selectedChatModel: resolvedChatModel,
+            requestHints,
+          }),
           messages: modelMessages,
           stopWhen: stepCountIs(5),
           providerOptions: isReasoningModel
@@ -158,9 +160,12 @@ export async function POST(request: Request) {
             isEnabled: isProductionEnvironment,
             functionId: "stream-text",
           },
-        })
+        });
 
-        console.log({system: enhancedConfig.system, tools: enhancedConfig.tools})
+        console.log({
+          system: enhancedConfig.system,
+          tools: enhancedConfig.tools,
+        });
 
         const result = streamText(enhancedConfig);
 
